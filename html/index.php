@@ -50,6 +50,7 @@ $app->add(
     }
 );
 
+$app->get('/oscar/{hash}', 'OscarApi\Controller\OscarController');
 $app->get('/oscar', 'OscarApi\Controller\OscarController');
 $app->post('/oscar', 'OscarApi\Controller\OscarController');
 

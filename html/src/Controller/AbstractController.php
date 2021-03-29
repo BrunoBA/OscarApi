@@ -14,15 +14,21 @@ abstract class AbstractController
 
     public function __invoke(Request $request, Response $response, $args): Response
     {
-        if ($request->getMethod() === self::METHOD_GET) {
-            return $this->get($request, $response, $args);
+        if ($request->getMethod() === self::METHOD_GET && count($args) === 0) {
+            return $this->index($request, $response, $args);
         }
 
-        return $this->post($request, $response, $args);
+        if ($request->getMethod() === self::METHOD_GET) {
+            return $this->show($request, $response, $args);
+        }
+
+        return $this->store($request, $response, $args);
     }
 
-    abstract function get(Request $request, Response $response, $args): Response;
+    abstract function index(Request $request, Response $response, $args): Response;
 
-    abstract function post(Request $request, Response $response, $args): Response;
+    abstract function show(Request $request, Response $response, $args): Response;
+
+    abstract function store(Request $request, Response $response, $args): Response;
 
 }
