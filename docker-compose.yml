@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  oscarapi:
+    container_name: oscarapi
+    build: .
+    volumes:
+      - ./html:/var/www/html/
+    expose:
+      - "80"
+    ports:
+      - "80:80"
