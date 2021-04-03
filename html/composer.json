@@ -15,9 +15,16 @@
     },
     "autoload": {
         "psr-4": {
-            "OscarApi\\": "src/"
+            "OscarApi\\": "src/",
+            "OscarApi\\Tests\\": "tests/"
         }
     },
     "name": "brunoba/oscarapi",
-    "description": "A simple api written in PHP"
+    "description": "A simple api written in PHP",
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "phpunit --colors ./tests"
+    }
 }
