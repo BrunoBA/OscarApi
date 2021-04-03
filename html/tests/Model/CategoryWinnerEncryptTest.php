@@ -2,15 +2,17 @@
 
 namespace OscarApi\Tests\Model;
 
-use OscarApi\Model\CategoryWinnerEncrypt;
+#use OscarApi\Model\CategoryWinnerEncrypt;
 use PHPUnit\Framework\TestCase;
 
 class CategoryWinnerEncryptTest extends TestCase
 {
+    const MAX_SIZE = 210;
+
     public function testIfIsPossibleToHaveUniqueNumbers()
     {
         $values = [];
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= self::MAX_SIZE; $i++) {
             $hash = md5($i);
             $hash = substr($hash, 0, 4);
 
@@ -22,6 +24,6 @@ class CategoryWinnerEncryptTest extends TestCase
             }
         }
 
-        $this->assertEquals(100, count($values));
+        $this->assertEquals(self::MAX_SIZE, count($values));
     }
 }

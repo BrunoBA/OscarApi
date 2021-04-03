@@ -3,6 +3,7 @@
 namespace OscarApi\Controller;
 
 use Oscar\Oscar;
+use OscarApi\Model\CategoryWinnerDecrypt;
 use OscarApi\Model\OscarCategoryParser;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -21,7 +22,11 @@ class OscarController extends AbstractController
 
     public function show(Request $request, Response $response, $args): Response
     {
-        $response->getBody()->write("SHOW");
+        $categoriesWinner = (new CategoryWinnerDecrypt($args['hash']))->decrypt();
+        $oscarData = new OscarCategoryParser($categoriesWinner);
+        $oscarData->attachChoices();
+
+        $response->getBody()->write($oscarData->getOscar()->toJson());
 
         return $response;
     }
@@ -37,33 +42,30 @@ class OscarController extends AbstractController
 
     function store(Request $request, Response $response, $args): Response
     {
-        try {
-            $data = $request->getBody()->getContents();
 
-            $extractor = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
-            $converter = new CamelCaseToSnakeCaseNameConverter();
-            $normalizers = [
-                new DateTimeNormalizer(),
-                new ArrayDenormalizer(),
-                new ObjectNormalizer(null, $converter, null, $extractor),
-            ];
-            $encoders = [new JsonEncoder()];
-            $serializer = new Serializer($normalizers, $encoders);
+        $data = $request->getBody()->getContents();
 
-            /** @var OscarCategoryParser $oscarData */
-            $oscarData = $serializer->deserialize(
-                $data,
-                OscarCategoryParser::class,
-                'json'
-            );
+        $extractor = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
+        $converter = new CamelCaseToSnakeCaseNameConverter();
+        $normalizers = [
+            new DateTimeNormalizer(),
+            new ArrayDenormalizer(),
+            new ObjectNormalizer(null, $converter, null, $extractor),
+        ];
+        $encoders = [new JsonEncoder()];
+        $serializer = new Serializer($normalizers, $encoders);
 
-            $oscarData->attachChoices();
+        /** @var OscarCategoryParser $oscarData */
+        $oscarData = $serializer->deserialize(
+            $data,
+            OscarCategoryParser::class,
+            'json'
+        );
 
-            $response->getBody()->write($oscarData->getOscar()->toJson());
+        $oscarData->attachChoices();
 
-            return $response;
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        $response->getBody()->write($oscarData->parseToHash());
+
+        return $response;
     }
 }

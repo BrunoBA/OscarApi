@@ -52,13 +52,21 @@ class OscarCategoryParser
         }
     }
 
-    public function parseToHash()
+    public function parseToHash(): string
     {
         $hash = "";
-
-        foreach ($this->categories as $category) {
-            $category->id;
+        foreach ($this->categories as $categoryWinner) {
+            $categoryWinnerEncrypt = new CategoryWinnerEncrypt($categoryWinner);
+            $hash .= (string)$categoryWinnerEncrypt;
         }
+
+        return $hash;
     }
 
+
+    public function loadFromHash(string $hash): void
+    {
+        $this->categories = (new CategoryWinnerDecrypt($hash))->decrypt();
+        $this->attachChoices();
+    }
 }
