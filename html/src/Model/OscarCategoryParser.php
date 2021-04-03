@@ -52,5 +52,13 @@ class OscarCategoryParser
         }
     }
 
+    public function parseToHash()
+    {
+        $hash = "";
+
+        foreach ($this->categories as $category) {
+            $category->id;
+        }
+    }
 
 }
