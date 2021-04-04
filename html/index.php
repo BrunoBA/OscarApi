@@ -14,7 +14,7 @@ $dotenv->safeLoad();
 
 $app = AppFactory::create();
 
-$isDev = new Env('IS_DEV');
+$isDev = new Env('IS_DEV', false);
 if ((bool)$isDev) {
     #$app->addErrorMiddleware(false,false,false);
     $app->add(new WhoopsMiddleware(['enable' => true]));
@@ -38,7 +38,7 @@ $app->add(
 $app->add(
     function ($request, $handler) {
         $response = $handler->handle($request);
-        $host = new Env('HOST');
+        $host = new Env('HOST', "*");
 
         return $response
             ->withHeader('Access-Control-Allow-Origin', (string)$host)
