@@ -11,7 +11,9 @@
         "vlucas/phpdotenv": "^5.3",
         "larapack/dd": "^1.1",
         "brunoba/oscar": "^1.0",
-        "phpdocumentor/reflection-docblock": "^5.2"
+        "phpdocumentor/reflection-docblock": "^5.2",
+        "twig/twig": "^3.3",
+        "dompdf/dompdf": "^1.0"
     },
     "autoload": {
         "psr-4": {

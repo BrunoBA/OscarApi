@@ -1,0 +1,6 @@
+<input id="{{ nominated }}" type="radio" name="{{ categoryName }}"
+        {% if (loop.index0 == category.winner and category.winner is not null ) %}
+            checked
+        {% endif %}
+>
+<label for="{{ nominated }}">{{ nominated }}</label><br>

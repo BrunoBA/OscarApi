@@ -2,9 +2,11 @@
 
 namespace OscarApi\Controller;
 
+use Dompdf\Dompdf;
 use Oscar\Oscar;
 use OscarApi\Model\CategoryWinnerDecrypt;
 use OscarApi\Model\OscarCategoryParser;
+use OscarApi\TemplateBuilder;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
@@ -22,11 +24,31 @@ class OscarController extends AbstractController
 
     public function show(Request $request, Response $response, $args): Response
     {
+        $queryString = $request->getQueryParams();
+
+        $render = in_array("render", array_keys($queryString));
+
         $categoriesWinner = (new CategoryWinnerDecrypt($args['hash']))->decrypt();
         $oscarData = new OscarCategoryParser($categoriesWinner);
         $oscarData->attachChoices();
 
-        $response->getBody()->write($oscarData->getOscar()->toJson());
+        $templateBuilder = new TemplateBuilder();
+
+        #$response->getBody()->write($oscarData->getOscar()->toJson());
+        #$response->getBody()->write();
+
+        $dompdf = new Dompdf();
+        $html = $templateBuilder->renderBets($oscarData->getOscar());
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4');
+
+        $dompdf->render();
+        if ($render) {
+            $dompdf->stream();
+        } else {
+            $response->getBody()->write($html);
+        }
 
         return $response;
     }
