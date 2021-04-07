@@ -7,7 +7,7 @@ login:
 build:
 	docker build oscar-api --no-cache -t .
 tag: login
-	docker tag $(IMAGE_NAME) $(USERNAME)/$(IMAGE_NAME):latest
+	docker tag $(IMAGE_NAME) $(USERNAME)/$(IMAGE_NAME):$(HASH)
 push: tag
 	@echo "Pushing image to DOCKER HUB"
-	docker push $(USERNAME)/$(IMAGE_NAME):latest
+	docker push $(USERNAME)/$(IMAGE_NAME):$(HASH)
