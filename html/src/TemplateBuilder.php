@@ -3,6 +3,7 @@
 
 namespace OscarApi;
 
+use chillerlan\QRCode\QRCode;
 use Oscar\Oscar;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -45,12 +46,15 @@ class TemplateBuilder
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function renderBets(Oscar $oscar): string
+    public function renderBets(Oscar $oscar, string $hash): string
     {
+        $timestamp = date('Y-m-d H:i:s');
+        $fingerPrint = (new QRCode())->render($hash.' - '.$timestamp);
         return $this->twig->render(
             'index.html.twig',
             [
                 'oscar' => $oscar,
+                'fingerPrint' => $fingerPrint,
                 'categories' => $oscar->getCategories(),
             ]
         );

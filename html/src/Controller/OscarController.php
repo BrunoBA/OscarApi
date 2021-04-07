@@ -25,10 +25,10 @@ class OscarController extends AbstractController
     public function show(Request $request, Response $response, $args): Response
     {
         $queryString = $request->getQueryParams();
+        $hash = $args['hash'];
 
         $render = in_array("render", array_keys($queryString));
-
-        $categoriesWinner = (new CategoryWinnerDecrypt($args['hash']))->decrypt();
+        $categoriesWinner = (new CategoryWinnerDecrypt($hash))->decrypt();
         $oscarData = new OscarCategoryParser($categoriesWinner);
         $oscarData->attachChoices();
 
@@ -38,7 +38,7 @@ class OscarController extends AbstractController
         #$response->getBody()->write();
 
         $dompdf = new Dompdf();
-        $html = $templateBuilder->renderBets($oscarData->getOscar());
+        $html = $templateBuilder->renderBets($oscarData->getOscar(), $hash);
         $dompdf->loadHtml($html);
 
         $dompdf->setPaper('A4');
