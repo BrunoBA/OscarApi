@@ -3,12 +3,13 @@
 namespace OscarApi\Tests\Model;
 
 use Oscar\Category;
-use OscarApi\Model\CategoryWinner;
-use OscarApi\Model\CategoryWinnerEncrypt;
 use Oscar\Oscar;
+use OscarApi\Model\CategoryWinner;
+use OscarApi\Model\CategoryWinnerDecrypt;
+use OscarApi\Model\CategoryWinnerEncrypt;
 use PHPUnit\Framework\TestCase;
 
-class CategoryWinnerEncryptTest extends TestCase
+class CategoryWinnerDecryptTest extends TestCase
 {
     /** @var Category[]|null */
     private ?array $oscarCategories;
@@ -18,20 +19,31 @@ class CategoryWinnerEncryptTest extends TestCase
         $this->oscarCategories = (new Oscar())->getCategories();
     }
 
-    /**
-     * @testdox Verify if hashes don't colide and generate unique winners and categories
-     */
-    public function testIfIsPossibleToHaveUniqueNumbers()
+    public function testIfThereIsTheCorrectQuantityOfPossibilities()
     {
-        $totalOfPossibilities = $this->getTotalOfPossibilities();
+        $arrayHashes = $this->loadHashes();
+        $hashes = implode('', $arrayHashes);
 
+        $categoryWinnerDecrypt = new CategoryWinnerDecrypt($hashes);
+        $categoryWinners = $categoryWinnerDecrypt->decrypt();
+
+        foreach ($categoryWinners as $categoryWinner) {
+            $this->assertIsNumeric($categoryWinner->getCategoryId(), "Check if the Category is valid");
+            $this->assertIsNumeric($categoryWinner->getWinner(), "Check if the winner is an index");
+        }
+
+        $this->assertEquals(count($arrayHashes), count($categoryWinners));
+    }
+
+    private function loadHashes(): array
+    {
         $hashes = [];
         foreach ($this->oscarCategories as $category) {
             $arrayOfHashes = $this->getArrayHashesByCategory($category);
             $hashes = array_merge($hashes, $arrayOfHashes);
         }
 
-        $this->assertEquals($totalOfPossibilities, count($hashes));
+        return $hashes;
     }
 
     private function getArrayHashesByCategory(Category $category): array
@@ -45,13 +57,4 @@ class CategoryWinnerEncryptTest extends TestCase
         return $arrayOfHashes;
     }
 
-    private function getTotalOfPossibilities(): int
-    {
-        $totalOfOptions = 0;
-        foreach ($this->oscarCategories as $category) {
-            $totalOfOptions += count($category->getNominees());
-        }
-
-        return $totalOfOptions;
-    }
 }

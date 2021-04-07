@@ -1,3 +1,4 @@
 /html/.env
 /html/vendor/
 .idea
+/html/test_result.html

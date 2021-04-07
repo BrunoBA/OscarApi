@@ -4,6 +4,8 @@ HASH=$(shell git log -1 --format="%h")
 
 login:
 	docker login
+build:
+	docker build -t .
 tag: login
 	docker tag $(IMAGE_NAME) $(USERNAME)/$(IMAGE_NAME):$(HASH)
 push: tag

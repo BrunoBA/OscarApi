@@ -8,6 +8,10 @@ use Throwable;
 
 class Env implements Stringable
 {
+    const HASH_FULL_SIZE = 8;
+    const HASH_HALF_SIZE = self::HASH_FULL_SIZE / 2;
+    const NUMBER_HASH = self::HASH_HALF_SIZE;
+
     private string $default;
 
     /**

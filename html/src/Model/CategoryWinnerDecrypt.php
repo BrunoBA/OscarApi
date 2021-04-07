@@ -6,6 +6,7 @@ namespace OscarApi\Model;
 
 use Exception;
 use Oscar\Oscar;
+use OscarApi\Env;
 
 class CategoryWinnerDecrypt
 {
@@ -24,12 +25,12 @@ class CategoryWinnerDecrypt
     /** @return CategoryWinner[] */
     public function decrypt(): array
     {
-        $arrayHash = str_split($this->hash, 8);
+        $arrayHash = str_split($this->hash, Env::HASH_FULL_SIZE);
 
         $categoryWinner = [];
         foreach ($arrayHash as $hash) {
-            $categoryHash = substr($hash, 0, 4);
-            $winnerHash = substr($hash, -4);
+            $categoryHash = $this->getCategoryHash($hash);
+            $winnerHash = $this->getWinnerHash($hash);
 
             $categoryId = $this->getValueByHash($categoryHash);
             $winner = $this->getValueByHash($winnerHash);
@@ -48,7 +49,7 @@ class CategoryWinnerDecrypt
     {
         $size = count((new Oscar())->getCategories());
         for ($i = 0; $i <= $size; $i++) {
-            $hash = (string) substr(md5($i), 0, 4);
+            $hash = (string)substr(md5($i), 0, Env::NUMBER_HASH);
             $this->hashIndex[$hash] = $i;
         }
     }
@@ -60,5 +61,16 @@ class CategoryWinnerDecrypt
         } catch (Exception) {
             return null;
         }
+    }
+
+    public function getCategoryHash(mixed $hash): bool|string
+    {
+        return substr($hash, 0, Env::HASH_HALF_SIZE);
+    }
+
+
+    public function getWinnerHash(mixed $hash): bool|string
+    {
+        return substr($hash, -Env::HASH_HALF_SIZE);
     }
 }

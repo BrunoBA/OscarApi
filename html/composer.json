@@ -28,6 +28,6 @@
         "phpunit/phpunit": "^9.5"
     },
     "scripts": {
-        "test": "phpunit --colors ./tests"
+        "test": "phpunit --testdox --colors -v --testdox-html test_result.html ./tests"
     }
 }

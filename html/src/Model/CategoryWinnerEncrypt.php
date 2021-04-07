@@ -3,6 +3,8 @@
 
 namespace OscarApi\Model;
 
+use JetBrains\PhpStorm\Pure;
+use OscarApi\Env;
 use Stringable;
 
 class CategoryWinnerEncrypt implements Stringable
@@ -21,10 +23,16 @@ class CategoryWinnerEncrypt implements Stringable
             return "";
         }
 
-        $hash = substr(md5($categoryId), 0, 4);
-        $winnerHash = substr(md5($winner), 0, 4);
+        $hash = $this->encryptByValue($categoryId);
+        $winnerHash = $this->encryptByValue($winner);
 
         return $hash.$winnerHash;
+    }
+
+    #[Pure]
+    public function encryptByValue(int $value): string
+    {
+        return substr(md5($value), 0, Env::NUMBER_HASH);
     }
 
 
