@@ -1,11 +1,13 @@
-<div class="oi">
-    <span>{{ category.name|upper }}</span>
+<div>
+    <span>
+        <b>
+            {{ category.name|upper }}
+        </b>
+    </span>
     <div>
         {% for nominated in category.nominees %}
-
             {% set categoryName = category.name|lower|replace({'this': foo, ' ': "_"}) %}
             {{ include('nominees.html.twig', {winner: category.winner, categoryName: categoryName, nominated: nominated}) }}
-
         {% endfor %}
     </div>
 </div>
