@@ -5,9 +5,9 @@ HASH=$(shell git log -1 --format="%h")
 login:
 	docker login
 build:
-	docker build -t .
+	docker build oscar-api --no-cache -t .
 tag: login
-	docker tag $(IMAGE_NAME) $(USERNAME)/$(IMAGE_NAME):$(HASH)
+	docker tag $(IMAGE_NAME) $(USERNAME)/$(IMAGE_NAME):latest
 push: tag
 	@echo "Pushing image to DOCKER HUB"
-	docker push $(USERNAME)/$(IMAGE_NAME):$(HASH)
+	docker push $(USERNAME)/$(IMAGE_NAME):latest
