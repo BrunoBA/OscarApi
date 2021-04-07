@@ -27,9 +27,10 @@ $app->add(
     ) {
         try {
             return $handler->handle($request);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             $response = (new Response())->withStatus(404);
-            $response->getBody()->write('404 Not found');
+            $message = $exception->getMessage();
+            $response->getBody()->write(sprintf('{"message":"%s", "code": %u}', $message, 404));
 
             return $response;
         }
