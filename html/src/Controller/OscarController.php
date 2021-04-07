@@ -45,8 +45,8 @@ class OscarController extends AbstractController
 
         $dompdf->render();
         /** @todo Remove it before relase in production */
-        #if ($render) {
-        if (false) {
+        if ($render) {
+        #if (false) {
             $dompdf->stream();
         } else {
             $response->getBody()->write($html);
