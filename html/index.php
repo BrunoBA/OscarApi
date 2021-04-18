@@ -1,6 +1,7 @@
 <?php
 
 use OscarApi\Env;
+use OscarApi\CorsMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Response;
@@ -20,6 +21,16 @@ if ((bool)$isDev) {
     $app->add(new WhoopsMiddleware(['enable' => true]));
 }
 
+$app->add(CorsMiddleware::class);
+
+// The RoutingMiddleware should be added after our CORS middleware 
+// so routing is performed first
+$app->addRoutingMiddleware();
+
+$app->get('/oscar/{hash}', 'OscarApi\Controller\OscarController');
+$app->get('/oscar', 'OscarApi\Controller\OscarController');
+$app->post('/oscar', 'OscarApi\Controller\OscarController');
+
 $app->add(
     function (
         ServerRequestInterface $request,
@@ -36,24 +47,5 @@ $app->add(
         }
     }
 );
-$app->add(
-    function ($request, $handler) {
-        $response = $handler->handle($request);
-        $host = new Env('HOST', "*");
-
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', (string)$host)
-            ->withHeader(
-                'Access-Control-Allow-Headers',
-                'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-            )
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    }
-);
-
-$app->get('/oscar/{hash}', 'OscarApi\Controller\OscarController');
-$app->get('/oscar', 'OscarApi\Controller\OscarController');
-$app->post('/oscar', 'OscarApi\Controller\OscarController');
-
 
 $app->run();
