@@ -1,12 +1,12 @@
 FROM brunoba93/php-8:f881845
 
 COPY ./default.conf /etc/apache2/sites-available/
-#COPY ./apache2.conf /etc/apache2/
+COPY ./apache2.conf /etc/apache2/
 COPY ./html /var/www/html/
 
 RUN composer install
 
-#RUN a2enmod headers
+RUN a2enmod headers
 RUN a2enmod rewrite
 RUN a2enmod actions
 RUN a2ensite

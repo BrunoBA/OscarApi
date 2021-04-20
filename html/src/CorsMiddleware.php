@@ -22,7 +22,7 @@ final class CorsMiddleware implements MiddlewareInterface
      * @return ResponseInterface The response
      */
     public function process(
-        ServerRequestInterface $request, 
+        ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
         $routeContext = RouteContext::fromRequest($request);
@@ -36,11 +36,12 @@ final class CorsMiddleware implements MiddlewareInterface
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST, PUT")
             ->withHeader("Access-Control-Max-Age", 86400)
-            ->withHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, 
-            Accept, x-client-key, x-client-token, x-client-secret, Authorization");
-
-        // Optional: Allow Ajax CORS requests with Authorization header
-        $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
+            ->withHeader(
+                "Access-Control-Allow-Headers",
+                "Origin, X-Requested-With, Content-Type,".
+                "Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+            )
+            ->withHeader('Access-Control-Allow-Credentials', 'true');
 
         return $response;
     }
