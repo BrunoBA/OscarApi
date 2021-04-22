@@ -1,18 +1,9 @@
-<span>
-    {% if (loop.index0 == category.winner and category.winner is not null ) %}
-        &#8226;
-    {% else %}
-        -
-    {% endif %}
-</span>
-
-
-<span>
-    {% if (loop.index0 == category.winner and category.winner is not null ) %}
-        <b>
-        {{ nominated }}
-        </b>
-    {% else %}
-        {{ nominated }}
-    {% endif %}
-</span><br>
+<li>
+    <p>
+        {% if (loop.index0 == category.winner and category.winner is not null ) %}
+            <b>{{ nominated }}</b>
+        {% else %}
+            {{ nominated }}
+        {% endif %}
+    </p>
+</li>

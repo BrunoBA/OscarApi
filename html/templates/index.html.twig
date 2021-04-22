@@ -1,11 +1,45 @@
 {% extends "template.html.twig" %}
 
 {% block fileName %}
-     Oscar's Document
+    Oscar's Document
 {% endblock %}
 
 {% block content %}
-     {% for category in categories %}
-          {{ include('category.html.twig', {category: category}) }}
-     {% endfor %}
+
+
+    {{ include('category-table.html.twig', {category: mainCategory, index: loop.index0}) }}
+
+    {% for category in others %}
+        <table class="main-table">
+            <tr class="title">
+                <td>
+                    {{ category[0].name }}
+                </td>
+                <td>
+                    {{ category[1].name }}
+                </td>
+            </tr>
+
+            {% for _ in category[0].nominees %}
+                <tr class="nominees">
+                    <td>
+                        {% if (loop.index0 == category[0].winner and category[0].winner is not null ) %}
+                            - <b>{{ category[0].nominees[loop.index0] }} </b>
+                        {% else %}
+                            - {{ category[0].nominees[loop.index0] }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if (loop.index0 == category[1].winner and category[1].winner is not null ) %}
+                            - <b> {{ category[1].nominees[loop.index0] }} </b>
+                        {% else %}
+                            - {{ category[1].nominees[loop.index0] }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+
 {% endblock %}

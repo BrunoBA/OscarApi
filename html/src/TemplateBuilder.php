@@ -49,13 +49,21 @@ class TemplateBuilder
     public function renderBets(Oscar $oscar, string $hash): string
     {
         $timestamp = date('Y-m-d H:i:s');
-        $fingerPrint = (new QRCode())->render($hash.' - '.$timestamp);
+        $hashData = $hash.' - '.$timestamp;
+        $fingerPrint = (new QRCode())->render($hashData);
+
+        $mainCategory = $oscar->getCategories()[0];
+        $others = array_chunk(array_slice($oscar->getCategories(), 1), 2);
+
         return $this->twig->render(
             'index.html.twig',
             [
                 'oscar' => $oscar,
                 'fingerPrint' => $fingerPrint,
                 'categories' => $oscar->getCategories(),
+                'mainCategory' => $mainCategory,
+                'others' => $others,
+                'hashData' => $hashData,
             ]
         );
     }

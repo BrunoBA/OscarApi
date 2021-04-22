@@ -1,0 +1,31 @@
+{% set className = category.name|lower|replace({' ': '-'}) %}
+<table class="nominee {{ className }} {{ class }}">
+    <tr class="title title-{{ className }}">
+        <td>
+            {{ category.name|upper }}
+        </td>
+        <td>
+            Fingerprint
+        </td>
+    </tr>
+    {% for nominated in category.nominees %}
+        <tr class="nominees-{{ className }}">
+            {% set categoryName = category.name|lower|replace({'this': foo, ' ': "_"}) %}
+            {{ include('nominees-row.html.twig',
+                {
+                    winner: category.winner,
+                    categoryName,
+                    nominated,
+                    className
+                }) }}
+
+            {% if loop.index == 1 %}
+                <td rowspan="9" style="text-align: center">
+                    <img style="width: 100px; height: 100px" src="{{ fingerPrint }}" alt="QR Code"/>
+                </td>
+            {% endif %}
+
+        </tr>
+    {% endfor %}
+
+</table>
