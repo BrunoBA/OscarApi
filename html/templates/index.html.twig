@@ -13,10 +13,10 @@
         <table class="main-table">
             <tr class="title">
                 <td>
-                    {{ category[0].name }}
+                    {{ category[0].name|upper }}
                 </td>
                 <td>
-                    {{ category[1].name }}
+                    {{ category[1].name|upper }}
                 </td>
             </tr>
 
@@ -31,7 +31,7 @@
                     </td>
                     <td>
                         {% if (loop.index0 == category[1].winner and category[1].winner is not null ) %}
-                            - <b> {{ category[1].nominees[loop.index0] }} </b>
+                            - <b>{{ category[1].nominees[loop.index0] }} </b>
                         {% else %}
                             - {{ category[1].nominees[loop.index0] }}
                         {% endif %}

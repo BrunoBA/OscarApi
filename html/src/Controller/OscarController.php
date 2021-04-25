@@ -34,9 +34,6 @@ class OscarController extends AbstractController
 
         $templateBuilder = new TemplateBuilder();
 
-        #$response->getBody()->write($oscarData->getOscar()->toJson());
-        #$response->getBody()->write();
-
         $dompdf = new Dompdf();
         $html = $templateBuilder->renderBets($oscarData->getOscar(), $hash);
         $dompdf->loadHtml($html);
@@ -44,10 +41,8 @@ class OscarController extends AbstractController
         $dompdf->setPaper('A4');
 
         $dompdf->render();
-        /** @todo Remove it before relase in production */
         if ($render) {
-        #if (false) {
-            $dompdf->stream();
+            $dompdf->stream("Café com Nerdeza - Oscar" . $templateBuilder->timestamp);
         } else {
             $response->getBody()->write($html);
         }

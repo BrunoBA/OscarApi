@@ -18,6 +18,7 @@ class TemplateBuilder
 
     /** @var FilesystemLoader */
     private FilesystemLoader $loader;
+    public string $timestamp = "";
 
     public function __construct()
     {
@@ -48,8 +49,8 @@ class TemplateBuilder
      */
     public function renderBets(Oscar $oscar, string $hash): string
     {
-        $timestamp = date('Y-m-d H:i:s');
-        $hashData = $hash.' - '.$timestamp;
+        $this->timestamp = date('Y-m-d H:i:s');
+        $hashData = $hash.' - '.$this->timestamp;
         $fingerPrint = (new QRCode())->render($hashData);
 
         $mainCategory = $oscar->getCategories()[0];
@@ -64,6 +65,7 @@ class TemplateBuilder
                 'mainCategory' => $mainCategory,
                 'others' => $others,
                 'hashData' => $hashData,
+                'timestamp' => $this->timestamp
             ]
         );
     }
